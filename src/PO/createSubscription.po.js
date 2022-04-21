@@ -2,9 +2,13 @@ class CreateSubscription {
   constructor() {
     this.dropDownForUsers = '//select[@id="user"]';
     this.description = '#description';
+    this.years = '#years';
     this.createButton = "//button[@type='submit']";
     this.cellEmail = ".//child::div[@tabulator-field='user']";
-    this.cellSubscription = ".//child::div[@tabulator-field='description']";
+    this.cellDescription = ".//child::div[@tabulator-field='description']";
+    this.cellYears = ".//child::div[@tabulator-field='years']";
+    this.checkboxSuspend = '#suspend';
+    this.cellSuspend = ".//child::div[@tabulator-field='suspend']";
   }
 
   async setPathToElementThroughSelectors(parent, child) {
@@ -41,7 +45,11 @@ class CreateSubscription {
         `./child::option[contains(text() , "${data.email}")]`
       )
     );
-    await this.setValue(this.description, data.subscriptions);
+    await this.setValue(this.description, data.description);
+    await this.setValue(this.years, data.years);
+    if (data.suspend === 'on') {
+      await this.clickElement(this.checkboxSuspend);
+    }
     await this.clickElement(this.createButton);
   }
 
@@ -58,11 +66,25 @@ class CreateSubscription {
     );
     await expect(emailUser).toHaveText(data.email);
 
-    const subscriptionUser = await this.setPathToElementThroughSelectors(
+    const description = await this.setPathToElementThroughSelectors(
       rowOfUser,
-      this.cellSubscription
+      this.cellDescription
     );
-    await expect(subscriptionUser).toHaveText(data.subscriptions);
+    await expect(description).toHaveText(data.description);
+
+    const yearsUser = await this.setPathToElementThroughSelectors(
+      rowOfUser,
+      this.cellYears
+    );
+    await expect(yearsUser).toHaveText(data.years);
+
+    if (data.suspend === 'on') {
+      const suspendUser = await this.setPathToElementThroughSelectors(
+        rowOfUser,
+        this.cellSuspend
+      );
+      await expect(suspendUser).toHaveText(data.suspend);
+    }
   }
 }
 

@@ -9,6 +9,15 @@ const Subscribe = require('../../src/PO/forms/subscribe.model');
 const { CreateUser } = require('../../src/PO/createUser.po.js');
 const { CreateSubscription } = require('../../src/PO/createSubscription.po.js');
 const { SideBarMenu } = require('../../src/PO/sideBarMenu.po.js');
+const {
+  addStep,
+  addFeature,
+  addAttachment,
+  addIssue,
+  addArgument,
+  addDescription,
+  addEnvironment,
+} = require('@wdio/allure-reporter').default;
 
 When(/^I go to "([^"]*)"$/, async function (url) {
   await browser.maximizeWindow();
@@ -55,12 +64,15 @@ When(
 );
 
 When(
-  'I create subscription as: {string}, {string}',
-  async function (email, subscriptions) {
+  'I create subscription as: {string}, {string}, {string}, {string}',
+  async function (email, description, years, suspend) {
     await CreateSubscription.createSubscription({
       email: email,
-      subscriptions: subscriptions,
+      description: description,
+      years: years,
+      suspend: suspend,
     });
+    // await Table.data();
   }
 );
 
@@ -78,16 +90,25 @@ Then(
       address2: address2,
       city: city,
     });
+    // await Table.data();
   }
 );
 
 Then(
-  "I check created user's subscription as: {string}, {string}",
-  async function (email, subscriptions) {
+  "I check created user's subscription as: {string}, {string}, {string}, {string}",
+  async function (email, description, years, suspend) {
     await CreateSubscription.checkUsersSubscription({
       email: email,
-      subscriptions: subscriptions,
+      description: description,
+      years: years,
+      suspend: suspend,
     });
+    const dataSubscription = await Table.data();
+    addAttachment(
+      'DataSubscription_Task_2',
+      dataSubscription,
+      'application/json'
+    );
   }
 );
 
