@@ -15,12 +15,12 @@ class TableUsers {
     return await $$(`//div[contains(text() , "${data.email}")]/..`);
   }
 
-  async clickListOfSubscriptions() {
+  async clickListOfUsers() {
     await $('//a[text()[contains(.,"List of users")]]').click();
   }
 
   async data(data) {
-    await this.clickListOfSubscriptions();
+    await this.clickListOfUsers();
     const rows = await this.rows(data);
     const result = rows.map(async (row) => {
       let result = {};
