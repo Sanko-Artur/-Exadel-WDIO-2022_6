@@ -4,7 +4,10 @@ const YAML = require('yaml');
 const { Login } = require('../../src/PO/login.po');
 const { CustomPage } = require('../../src/PO/custom_page.po');
 const { CustomPage2 } = require('../../src/PO/custom_page_2.po');
-const { Table } = require('../../src/PO/tables/table.po');
+const {
+  TableSubscriptions,
+} = require('../../src/PO/tables/tableSubscriptions.po.js');
+const { TableUsers } = require('../../src/PO/tables/tableUsers.po.js');
 const Subscribe = require('../../src/PO/forms/subscribe.model');
 const { CreateUser } = require('../../src/PO/createUser.po.js');
 const { CreateSubscription } = require('../../src/PO/createSubscription.po.js');
@@ -18,6 +21,7 @@ const {
   addDescription,
   addEnvironment,
 } = require('@wdio/allure-reporter').default;
+let dataUser;
 
 When(/^I go to "([^"]*)"$/, async function (url) {
   await browser.maximizeWindow();
@@ -60,6 +64,7 @@ When(
       address2: address2,
       city: city,
     });
+    dataUser = await TableUsers.data({ email: email });
   }
 );
 
@@ -72,7 +77,13 @@ When(
       years: years,
       suspend: suspend,
     });
-    // await Table.data();
+    addAttachment('DataUser_Task_2', dataUser, 'application/json');
+    const dataSubscription = await TableSubscriptions.data({ email: email });
+    addAttachment(
+      'DataSubscription_Task_2',
+      dataSubscription,
+      'application/json'
+    );
   }
 );
 
@@ -90,7 +101,6 @@ Then(
       address2: address2,
       city: city,
     });
-    // await Table.data();
   }
 );
 
@@ -103,12 +113,6 @@ Then(
       years: years,
       suspend: suspend,
     });
-    const dataSubscription = await Table.data();
-    addAttachment(
-      'DataSubscription_Task_2',
-      dataSubscription,
-      'application/json'
-    );
   }
 );
 

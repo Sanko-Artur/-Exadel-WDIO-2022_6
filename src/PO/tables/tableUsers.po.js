@@ -1,23 +1,27 @@
-class Table {
+class TableUsers {
   constructor() {
-    this.table = $('#table');
+    this.table = $('#users-table');
     this.headersSelector = '.tabulator-col-content';
     this.cellSelector = '.tabulator-cell';
-    this.rowSelector = '.tabulator-row';
   }
 
   async headers() {
-    return this.table.$$(this.headersSelector).map(async (header) => {
+    return await this.table.$$(this.headersSelector).map(async (header) => {
       return { element: await header, name: await header.getText() };
     });
   }
 
-  rows() {
-    return $$(this.rowSelector);
+  async rows(data) {
+    return await $$(`//div[contains(text() , "${data.email}")]/..`);
   }
 
-  async data() {
-    const rows = await this.rows();
+  async clickListOfSubscriptions() {
+    await $('//a[text()[contains(.,"List of users")]]').click();
+  }
+
+  async data(data) {
+    await this.clickListOfSubscriptions();
+    const rows = await this.rows(data);
     const result = rows.map(async (row) => {
       let result = {};
       const cells = await row.$$(this.cellSelector);
@@ -28,9 +32,8 @@ class Table {
       }
       return result;
     });
-    console.log(await Promise.all(result));
     return await Promise.all(result);
   }
 }
 
-module.exports = { Table: new Table() };
+module.exports = { TableUsers: new TableUsers() };
