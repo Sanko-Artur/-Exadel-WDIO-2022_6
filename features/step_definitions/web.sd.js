@@ -77,10 +77,10 @@ When(
       suspend: suspend,
     });
     addAttachment('DataUser_Task_2', this.state.dataUser, 'application/json');
-    this.state.dataSubscription = await TableSubscriptions.data({ email: email });
+    const dataSubscription = await TableSubscriptions.data({ email: email });
     addAttachment(
       'DataSubscription_Task_2',
-      this.state.dataSubscription,
+      dataSubscription,
       'application/json'
     );
   }
