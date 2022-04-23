@@ -11,7 +11,7 @@ Feature: Inspect created users with subscriptions
         When I go to "Create Subscription" menu item
         When I create subscription as: "<email>", "<description>", "<years>", "<suspend>"
         Then I check created user's subscription as: "<email>", "<description>", "<years>", "<suspend>"
-        When I log out
+        Then I log out
         Examples:
             | nameOfScenario                    | email         | password  | address1 | address2 | city  | description  | years | suspend |
             | Creation user 1 with subscription | user1@mail.ru | password1 | Street1  | Dom1     | City1 | Description1 | 1     | on      |

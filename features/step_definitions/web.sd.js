@@ -21,7 +21,6 @@ const {
   addDescription,
   addEnvironment,
 } = require('@wdio/allure-reporter').default;
-let dataUser;
 
 When(/^I go to "([^"]*)"$/, async function (url) {
   await browser.maximizeWindow();
@@ -64,7 +63,7 @@ When(
       address2: address2,
       city: city,
     });
-    dataUser = await TableUsers.data({ email: email });
+    this.state.dataUser = await TableUsers.data({ email: email });
   }
 );
 
@@ -77,17 +76,17 @@ When(
       years: years,
       suspend: suspend,
     });
-    addAttachment('DataUser_Task_2', dataUser, 'application/json');
-    const dataSubscription = await TableSubscriptions.data({ email: email });
+    addAttachment('DataUser_Task_2', this.state.dataUser, 'application/json');
+    this.state.dataSubscription = await TableSubscriptions.data({ email: email });
     addAttachment(
       'DataSubscription_Task_2',
-      dataSubscription,
+      this.state.dataSubscription,
       'application/json'
     );
   }
 );
 
-When('I log out', async function () {
+Then('I log out', async function () {
   await $('//a[@title="Log out"]').click();
 });
 
